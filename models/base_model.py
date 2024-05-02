@@ -5,14 +5,15 @@ import uuid
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, DateTime, String
+from datetime import datetime
 
 Base = declarative_base()
 
 class BaseModel:
     """A base class for all hbnb models"""
     id = Column(String(60), nullable=False, primary_key=True, unique=True)
-    created_at = Column(DATETIME, nullable=False, default=datetime.now())
-    updated_at = Column(DATETIME, nullable=False, default=datetime.now())
+    created_at = Column(DateTime, nullable=False, default=datetime.now())
+    updated_at = Column(DateTime, nullable=False, default=datetime.now())
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""        

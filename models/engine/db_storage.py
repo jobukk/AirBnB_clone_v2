@@ -4,7 +4,7 @@
 """
 from os import getenv
 from sqlalchemy import create_engine
-from models.base import Base, BaseModel
+from models.base_model import Base, BaseModel
 from sqlalchemy.orm import scoped_session, sessionmaker
 from models.state import State
 from models.city import City
@@ -24,10 +24,11 @@ class DBStorage:
         """
 
         """
-        username = getenv(HBNB_MYSQL_USER)
-        password = getenv(HBNB_MYSQL_PWD)
-        host = getenv(HBNB_MYSQL_HOST)
-        db_name = getenv(HBNB_MYSQL_DB)
+        username = getenv('HBNB_MYSQL_USER')
+        password = getenv('HBNB_MYSQL_PWD')
+        host = getenv('HBNB_MYSQL_HOST')
+        db_name = getenv('HBNB_MYSQL_DB')
+
         DATABASE_URL = "mysql+mysqldb://{}:{}@{}:3306/{}".format(
             username, password, host, db_name
         )
@@ -35,7 +36,7 @@ class DBStorage:
             DATABASE_URL,
             pool_pre_ping=True #check if connection is active
         )
-        if env == 'test':
+        if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
