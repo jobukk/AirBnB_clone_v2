@@ -15,7 +15,7 @@ class State(BaseModel, Base):
     else:
         @property
         def cities(self):
-            """ """
+            """ City """
             import models
             from models.city import City
             city_list = []

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-
+DBStorage
 """
 from os import getenv
 from sqlalchemy import create_engine
@@ -15,7 +15,7 @@ from models.amenity import Amenity
 
 class DBStorage:
     """
-
+    DBStorage
     """
     __engine = None
     __session = None

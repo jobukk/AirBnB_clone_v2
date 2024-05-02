@@ -5,7 +5,7 @@ import uuid
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, DateTime, String
-from datetime import datetime
+
 
 Base = declarative_base()
 
@@ -54,6 +54,8 @@ class BaseModel:
         return dictionary
 
     def delete(self):
-        """ """
+        """
+        Delete 
+        """
         from models import storage
         storage.delete(self)
