@@ -5,6 +5,13 @@
 from os import getenv
 from sqlalchemy import create_engine
 from models.base import Base, BaseModel
+from sqlalchemy.orm import scoped_session, sessionmaker
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.user import User
+from models.review import Review
+from models.amenity import Amenity
 
 class DBStorage:
     """
@@ -33,20 +40,23 @@ class DBStorage:
 
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage"""
-        objects = dict()
-        all_classes = (User, State, City, Amenity, Place, Review)
-        if cls == None:
-            for class_type in all_classes:
-                query = self.__session.query(class_type)
-                for obj in query.all():
-                    obj_key = '{}.{}'.format(obj.__class__.__name__, obj.id)
-                    objects[obj_key] = obj
+        objs_list = []
+        if cls:
+            if isinstance(cls, str):
+                try:
+                    cls = globals()[cls]
+                except KeyError:
+                    pass
+            if issubclass(cls, Base):
+                objs_list = self. __session.query(cls).all()
         else:
-            query = self.__session.query(cls)
-            for obj in query.all():
-                obj_key = '{}.{}'.format(obj.__class__.__name__, obj.id)
-                objects[obj_key] = obj
-        return objects
+            for subclass in Base.__subclasses_():
+                objs_list.extend(self.__session.query(subclass).all())
+        obj_dict = {}
+        for obj in objs_list:
+            key = "{}.{}".format(obj.__class__.__name__, obj.id)
+            obj_dict[key] = obj
+        return obj_dict                        
 
     def delete(self, obj=None):
         """Removes an object from the storage database"""
@@ -82,4 +92,5 @@ class DBStorage:
 
     def close(self):
         """Closes the storage engine."""
-        self.__session.close()    
+        self.__session.close()
+            
