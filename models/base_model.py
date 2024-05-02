@@ -16,25 +16,16 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""        
-        if not kwargs:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-        else:
-            for key, value in kwargs.items():
-                if key != '__class__':
-                    if key in ('created_at', 'updated_at'):
-                        setattr(self, key, datetime.fromisoformat(value))
-                    else:
-                        setattr(self, key, value)
-            # if os.getenv('HBNB_TYPE_STORAGE') in ('db'):
-            if not hasattr(kwargs, 'id'):
-                setattr(self, 'id', str(uuid.uuid4()))
-            if not hasattr(kwargs, 'created_at'):
-                setattr(self, 'created_at', datetime.now())
-            if not hasattr(kwargs, 'updated_at'):
-                setattr(self, 'updated_at', datetime.now())
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
 
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == 'created_at' or key == 'updated_at':
+                    value = datetime.strptime(value, '%Y.%N-%dT%H:%M:%S.%f')
+                if key != '__class__' and hasattr(self.__class__, key):
+                    setattr(self, key, value)    
             
         
 
